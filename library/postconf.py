@@ -82,6 +82,9 @@ RETURN = r''' # '''
 
 from ansible.module_utils.basic import AnsibleModule
 
+# remove brackets, comas and apostrophes from list like string
+stripit = lambda vvv: vvv.strip('[]').translate(vvv.maketrans({"'": "", ",": ""}))
+
 
 def run_module():
 
@@ -119,7 +122,7 @@ def run_module():
         module.fail_json("'%s' is known parameter for Postfix, but returns error." % param_name)
     curr_value = std_out.strip()
 
-    new_value = module.params.get("value", "")
+    new_value = stripit(module.params.get("value", ""))
     state = module.params.get("state", "present")
 
     if state == "present":
